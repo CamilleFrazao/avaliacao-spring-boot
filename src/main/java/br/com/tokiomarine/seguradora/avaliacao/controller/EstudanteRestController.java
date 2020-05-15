@@ -1,15 +1,48 @@
 package br.com.tokiomarine.seguradora.avaliacao.controller;
 
-// TODO não esquecer de usar as anotações para criação do restcontroller
+import br.com.tokiomarine.seguradora.avaliacao.entidade.Estudante;
+import br.com.tokiomarine.seguradora.avaliacao.repository.EstudanteRepository;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
 public class EstudanteRestController {
 
-	// TODO caso você não conheça THEMELEAF faça a implementação dos métodos em forma de RESTCONTROLLER (seguindo o padrão RESTFUL)
+    EstudanteRepository repository;
 
-	// TODO IMPLEMENTAR CADASTRO DE ESTUDANTES (POST)
+    EstudanteRestController(EstudanteRepository repository) {
+        this.repository = repository;
+    }
 
-	// TODO IMPLEMENTAR ATUALIZACAO DE ESTUDANTES (PUT)
+    @PostMapping("/estudantes/add")
+    Estudante adicionarEstudante(@RequestBody Estudante estudante){
+        return repository.save(estudante);
+    }
 
-	// TODO IMPLEMENTAR A LISTAGEM DE ESTUDANTES (GET)
+    @PutMapping("/estudantes/editar/{id}")
+    Estudante exibirEdicaoEstudante(@RequestBody Estudante novoEstudante,
+                                    @PathVariable Long id){
+        return repository.findById(id)
+                .map(estudante -> {
+                    estudante.setNome(novoEstudante.getNome());
+                    estudante.setEmail(novoEstudante.getEmail());
+                    estudante.setTelefone(novoEstudante.getTelefone());
+                    return repository.save(estudante);
+                })
+                .orElseGet(() -> {
+                    novoEstudante.setId(id);
+                    return repository.save(novoEstudante);
+                });
+    }
 
-	// TODO IMPLEMENTAR A EXCLUSÃO DE ESTUDANTES (DELETE)
+    @GetMapping("/estudantes/listar")
+    List<Estudante> listarEstudantes() {
+        return (List<Estudante>) repository.findAll();
+    }
+
+    @DeleteMapping("/estudantes/apagar/{id}")
+    void apagarEstudante(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
 }
