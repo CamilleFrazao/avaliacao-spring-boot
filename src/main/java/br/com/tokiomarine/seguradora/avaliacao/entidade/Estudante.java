@@ -16,12 +16,17 @@ public class Estudante {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    //@NotBlank(message = "Nome é obrigatório")
+    @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
-   // @NotBlank(message = "Email é obrigatório")
+    @NotBlank(message = "Email é obrigatório")
     private String email;
 
     private String telefone;
+
+    @NotBlank(message = "Matrícula é obrigatória")
+    private String matricula;
+
+    private String curso;
 
 }

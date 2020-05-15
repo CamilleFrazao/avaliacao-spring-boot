@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/estudante")
 public class EstudanteRestController {
 
     EstudanteRepository repository;
@@ -15,12 +16,12 @@ public class EstudanteRestController {
         this.repository = repository;
     }
 
-    @PostMapping("/estudantes/add")
+    @PostMapping("/add")
     Estudante adicionarEstudante(@RequestBody Estudante estudante){
         return repository.save(estudante);
     }
 
-    @PutMapping("/estudantes/editar/{id}")
+    @PutMapping("/editar/{id}")
     Estudante exibirEdicaoEstudante(@RequestBody Estudante novoEstudante,
                                     @PathVariable Long id){
         return repository.findById(id)
@@ -28,6 +29,8 @@ public class EstudanteRestController {
                     estudante.setNome(novoEstudante.getNome());
                     estudante.setEmail(novoEstudante.getEmail());
                     estudante.setTelefone(novoEstudante.getTelefone());
+                    estudante.setCurso(novoEstudante.getCurso());
+                    estudante.setMatricula(novoEstudante.getMatricula());
                     return repository.save(estudante);
                 })
                 .orElseGet(() -> {
@@ -36,12 +39,12 @@ public class EstudanteRestController {
                 });
     }
 
-    @GetMapping("/estudantes/listar")
+    @GetMapping("/listar")
     List<Estudante> listarEstudantes() {
         return (List<Estudante>) repository.findAll();
     }
 
-    @DeleteMapping("/estudantes/apagar/{id}")
+    @DeleteMapping("/apagar/{id}")
     void apagarEstudante(@PathVariable Long id) {
         repository.deleteById(id);
     }
